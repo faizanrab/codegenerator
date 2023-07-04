@@ -1,7 +1,6 @@
 import os
 import tkinter as tk
 from tkinter import ttk, filedialog
-import javalang
 
 
 def list_files_with_keywords(directory):
@@ -179,26 +178,8 @@ def generate_code():
         print(file_path)
         # Read the contents of the file
         with open(file_path, 'r') as file:
-            file_contents = file.read()
-            # Parse the Java code using javalang
-        try:
-            tree = javalang.parse.parse(file_contents)
-        except javalang.parser.JavaSyntaxError as e:
-            print(f"Syntax error in file: {file_path}")
-            print(e)
-            continue
-
-        for path, node in tree:
-            if isinstance(node, javalang.tree.ClassDeclaration):
-                print("Class:", node.name)
-            elif isinstance(node, javalang.tree.MethodDeclaration):
-                print("Method:", node.name)
-            elif isinstance(node, javalang.tree.FieldDeclaration):
-                for variable_declarator in node.declarators:
-                    variable_name = variable_declarator.name
-                    variable_type = variable_declarator.type.name
-                    print("Variable:", variable_name, "Type:", variable_type)
-
+            file_contents = file.readlines()
+        # Find the last line containing a closing curly brace
         last_line_index = None
         for i in range(len(file_contents) - 1, -1, -1):
             if '}' in file_contents[i]:
